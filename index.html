@@ -42,10 +42,12 @@
 
     <h3><a id="welcome-to-docker-in-practice" class="anchor" href="#welcome-to-docker-in-practice" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome to Docker in Practice</h3>
 
-    <p>Docker in Practice is currently available via the Manning Early Access Program.
-    See more about the book on the <a href="http://manning.com/miell/?a_aid=zwischenzugs&amp;a_bid=e0d48f62">Manning site</a></p>
+    <p>The first four chapters of Docker in Practice are currently available via the Manning Early Access Program.
+    See more about the book on the <a href="http://manning.com/miell/?a_aid=zwischenzugs&amp;a_bid=e0d48f62">Manning website</a>.</p>
 
-    <div id="reposlist"></div>
+    <h3><a id="list-of-repositories-created-for-the-book" class="anchor" href="#list-of-repositories-created-for-the-book" aria-hidden="true"><span class="octicon octicon-link"></span></a>List of Repositories Created for the Book</h3>
+
+    <div id="repolist"><ul></ul></div>
 
     <hr>
     <span class="credits left">Project maintained by <a href="https://github.com/docker-in-practice">docker-in-practice</a></span>
@@ -64,6 +66,24 @@
     var pageTracker = _gat._getTracker("UA-37081910-5");
   pageTracker._trackPageview();
   } catch(err) {}
+</script>
+<script>
+  $.get('data/repos.json', function (repolist) {
+    repolist.sort(function (r1, r2) {
+      if (r1.name < r2.name) { return -1; }
+      else if (r1.name > r2.name) { return 1; }
+      else { return 0; }
+    });
+    repolist.map(function (r) {
+      var $li = $('<li></li>');
+      if (r.description !== '') {
+        $li.text(' - ' + r.description);
+      }
+      var $a = $('<a></a>').prop('href', r.html_url).text(r.name);
+      $li.prepend($a);
+      $li.appendTo('#repolist > ul');
+    });
+  }, 'json');
 </script>
 
 </body>
