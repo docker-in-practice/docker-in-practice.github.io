@@ -81,15 +81,31 @@
   function displayRepos() {
     if (ghrepos === null || dhrepos === null) { return; }
 
-    var i, r;
+    var i, j, r, ghr, dhr;
     var repolist = [];
+    // Create initial list with gh repos
     for (i = 0; i < ghrepos.length; i++) {
-      r = ghrepos[i];
+      ghr = ghrepos[i];
       repolist.push({
-        'ghname': r.name,
-        'ghdesc': r.description,
-        'ghurl': r.html_url,
+        'ghname': ghr.name,
+        'ghdesc': ghr.description,
+        'ghurl': ghr.html_url,
+        'dhrepos': [],
       });
+    }
+    // Populate each gh repo with any dh repos built from them
+    for (i = 0; i < dhrepos.length; i++) {
+      dhr = dhrepos[i];
+      var found = false;
+      for (j = 0; j < repolist.length; j++) {
+        r = repolist[j];
+        if (r.ghname == dhr.github_name) {
+          r.dhrepos.push({'dhname': dhr.name, 'dhurl': dhr.url});
+          found = true;
+          break;
+        }
+      }
+      if (!found) { console.error(dhr); }
     }
 
     repolist.sort(function (r1, r2) {
@@ -97,13 +113,24 @@
       else if (r1.ghname > r2.ghname) { return 1; }
       else { return 0; }
     });
-    repolist.map(function (r) {
+    repolist.forEach(function (r) {
       var $li = $('<li></li>');
-      if (r.ghdesc !== '') {
-        $li.text(' - ' + r.ghdesc);
+      var dhlinks = r.dhrepos.map(function (dhr) {
+        return $('<a></a>').prop('href', dhr.dhurl).text(dhr.dhname);
+      });
+      for (var i = dhlinks.length-1; i > 0; i--) {
+        dhlinks.splice(i, 0, document.createTextNode(', '));
       }
-      var $a = $('<a></a>').prop('href', r.ghurl).text(r.ghname);
-      $li.prepend($a);
+      var $gha = $('<a></a>').prop('href', r.ghurl).text(r.ghname);
+      $li.append($gha);
+      if (dhlinks.length > 0) {
+        $li.append(document.createTextNode(' - ('));
+        $li.append(dhlinks);
+        $li.append(document.createTextNode(')'));
+      }
+      if (r.ghdesc !== '') {
+        $li.append(document.createTextNode(' - ' + r.ghdesc));
+      }
       $li.appendTo('#repolist > ul');
     });
   }
