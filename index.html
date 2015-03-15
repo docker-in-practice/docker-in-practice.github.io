@@ -86,6 +86,7 @@
     // Create initial list with gh repos
     for (i = 0; i < ghrepos.length; i++) {
       ghr = ghrepos[i];
+      if (ghr.name === 'docker-in-practice.github.io') { continue; }
       repolist.push({
         'ghname': ghr.name,
         'ghdesc': ghr.description,
