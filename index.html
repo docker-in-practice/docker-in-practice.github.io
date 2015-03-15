@@ -68,7 +68,7 @@
   } catch(err) {}
 </script>
 <script>
-  $.get('data/repos.json', function (repolist) {
+  $.get('data/ghrepos.json', function (repolist) {
     repolist.sort(function (r1, r2) {
       if (r1.name < r2.name) { return -1; }
       else if (r1.name > r2.name) { return 1; }
