@@ -68,22 +68,45 @@
   } catch(err) {}
 </script>
 <script>
-  $.get('data/ghrepos.json', function (repolist) {
+  'use strict';
+  var ghrepos = null;
+  var dhrepos = null;
+  $.get('data/ghrepos.json', function (repos) {
+    ghrepos = repos; displayRepos();
+  }, 'json');
+  $.get('data/dhrepos.json', function (repos) {
+    dhrepos = repos; displayRepos();
+  }, 'json');
+
+  function displayRepos() {
+    if (ghrepos === null || dhrepos === null) { return; }
+
+    var i, r;
+    var repolist = [];
+    for (i = 0; i < ghrepos.length; i++) {
+      r = ghrepos[i];
+      repolist.push({
+        'ghname': r.name,
+        'ghdesc': r.description,
+        'ghurl': r.html_url,
+      });
+    }
+
     repolist.sort(function (r1, r2) {
-      if (r1.name < r2.name) { return -1; }
-      else if (r1.name > r2.name) { return 1; }
+      if (r1.ghname < r2.ghname) { return -1; }
+      else if (r1.ghname > r2.ghname) { return 1; }
       else { return 0; }
     });
     repolist.map(function (r) {
       var $li = $('<li></li>');
-      if (r.description !== '') {
-        $li.text(' - ' + r.description);
+      if (r.ghdesc !== '') {
+        $li.text(' - ' + r.ghdesc);
       }
-      var $a = $('<a></a>').prop('href', r.html_url).text(r.name);
+      var $a = $('<a></a>').prop('href', r.ghurl).text(r.ghname);
       $li.prepend($a);
       $li.appendTo('#repolist > ul');
     });
-  }, 'json');
+  }
 </script>
 
 </body>
