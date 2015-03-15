@@ -10,8 +10,8 @@ import re
 SCRIPTDIR = os.path.dirname(os.path.abspath(__file__))
 DATADIR = os.path.join(os.path.dirname(SCRIPTDIR), 'data')
 
-def log(msg):
-    print(msg)
+def log(msg, *args):
+    print(msg % args)
 
 def get(url):
     return urllib2.urlopen(url).read()
@@ -38,14 +38,27 @@ def get_github_data():
   with open(os.path.join(DATADIR, 'ghrepos.json'), 'w') as f:
       f.write(repos)
 
+repolistre = '''<a href="/u/dockerinpractice/([^/"']+)/"><div class="repo-list-item box">'''
+repoprojre = '''https://github\.com/docker-in-practice/([^/"']+)\.git'''
 def get_dockerhub_data():
   log('Getting DH data!')
   reposhtml = get('https://registry.hub.docker.com/repos/dockerinpractice/')
-  log('Extracting repos list')
-  reposre = '<a href="/u/dockerinpractice/([^/]+)/"><div class="repo-list-item box">'
-  repos = re.findall(reposre, reposhtml)
-  assert len(repos) != 0
-  log('Got repos list, writing')
+  log('Scraping repo names')
+  reponames = re.findall(repolistre, reposhtml)
+  assert len(reponames) > 0
+
+  repos = []
+  log('Got repos list, getting details for each repo')
+  baserepourl = 'https://registry.hub.docker.com/u/dockerinpractice/'
+  for i, reponame in enumerate(reponames):
+      log('%s/%s - %s', i+1, len(reponames), reponame)
+      url = baserepourl + reponame + '/'
+      repohtml = get(url)
+      assert 'AUTOMATED BUILD REPOSITORY' in repohtml, reponame + " not automated"
+      repoprojs = re.findall(repoprojre, repohtml)
+      assert len(repoprojs) == 1, "Got %s for %s" % (repoprojs, reponame)
+      repos.append({ "name": reponame, "github_name": repoprojs[0], "url": url })
+
   with open(os.path.join(DATADIR, 'dhrepos.json'), 'w') as f:
       json.dump(repos, f)
 
