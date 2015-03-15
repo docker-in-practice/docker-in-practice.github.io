@@ -47,7 +47,7 @@
 
     <h3><a id="list-of-repositories-created-for-the-book" class="anchor" href="#list-of-repositories-created-for-the-book" aria-hidden="true"><span class="octicon octicon-link"></span></a>List of Repositories Created for the Book</h3>
 
-    <div id="repolist"><ul></ul></div>
+    <div id="repolist"></div>
 
     <hr>
     <span class="credits left">Project maintained by <a href="https://github.com/docker-in-practice">docker-in-practice</a></span>
@@ -113,25 +113,25 @@
       else if (r1.ghname > r2.ghname) { return 1; }
       else { return 0; }
     });
+    var $repolist = $('#repolist');
     repolist.forEach(function (r) {
-      var $li = $('<li></li>');
-      var dhlinks = r.dhrepos.map(function (dhr) {
-        return $('<a></a>').prop('href', dhr.dhurl).text(dhr.dhname);
-      });
-      for (var i = dhlinks.length-1; i > 0; i--) {
-        dhlinks.splice(i, 0, document.createTextNode(', '));
-      }
-      var $gha = $('<a></a>').prop('href', r.ghurl).text(r.ghname);
-      $li.append($gha);
-      if (dhlinks.length > 0) {
-        $li.append(document.createTextNode(' - ('));
-        $li.append(dhlinks);
-        $li.append(document.createTextNode(')'));
-      }
+      var $title = $('<h4></h4>').text(r.ghname);
+      var $desc = '';
       if (r.ghdesc !== '') {
-        $li.append(document.createTextNode(' - ' + r.ghdesc));
+        $desc = document.createTextNode(r.ghdesc);
       }
-      $li.appendTo('#repolist > ul');
+      var $links = $('<ul></ul>');
+      $links.append($('<li></li>').append(
+        $('<a></a>').prop('href', r.ghurl).text('Github Link')
+      ));
+      $links.append(r.dhrepos.map(function (dhr) {
+        var linktext = 'Docker Hub Link';
+        if (r.dhrepos.length > 1) { linktext += ' - ' + dhr.dhname; }
+        return $('<li></li>').append(
+          $('<a></a>').prop('href', dhr.dhurl).text(linktext)
+        );
+      }));
+      $repolist.append($title, $desc, $links);
     });
   }
 </script>
