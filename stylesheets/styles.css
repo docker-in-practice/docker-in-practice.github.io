@@ -1,3 +1,26 @@
+.fancybutton {
+  color: #fff;
+  padding: 4px 8px 6px;
+  border: 1px solid #9fa3a7;
+  text-decoration: none;
+  text-shadow: 0 1px 0 rgba(0,0,0,0.3);
+
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  -moz-background-clip: padding;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  background-color: #008fcf;
+  box-shadow:
+      0 1px 0 rgba(0,0,0,.25),
+      inset 0 1px 2px rgba(255,255,255,.67),
+      inset 0 -1px 0 rgba(0,0,0,.14);
+  background-image: -moz-linear-gradient(90deg, #73797d 0%, #a5a9ad 100%);
+  background-image: -o-linear-gradient(90deg, #73797d 0%, #a5a9ad 100%);
+  background-image: -webkit-linear-gradient(90deg, #73797d 0%, #a5a9ad 100%);
+  background-image: linear-gradient(90deg, #73797d 0%, #a5a9ad 100%);
+}
 @font-face {
   font-family: 'OpenSansLight';
   src: url("../fonts/OpenSans-Light-webfont.eot");
