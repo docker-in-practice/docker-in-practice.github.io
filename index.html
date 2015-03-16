@@ -43,7 +43,7 @@
     <h3><a id="welcome-to-docker-in-practice" class="anchor" href="#welcome-to-docker-in-practice" aria-hidden="true"><span class="octicon octicon-link"></span></a>Welcome to Docker in Practice</h3>
 
     <p>The first three chapters of Docker in Practice are currently available via the Manning Early Access Program.
-    See more about the book on the <a href="http://manning.com/miell/?a_aid=aidanhs&amp;a_bid=e0d48f62">Manning website</a>.</p>
+    See more about the book on the <a class="manning-link" href="http://manning.com/miell/?a_aid=aidanhs&amp;a_bid=e0d48f62">Manning website</a>.</p>
 
     <h3><a id="list-of-repositories-created-for-the-book" class="anchor" href="#list-of-repositories-created-for-the-book" aria-hidden="true"><span class="octicon octicon-link"></span></a>List of Repositories Created for the Book</h3>
 
@@ -69,6 +69,9 @@
 </script>
 <script>
   'use strict';
+  if (Math.random() >= 0.5) {
+    $('.manning-link').prop('href', 'http://manning.com/miell/?a_aid=zwischenzugs&a_bid=e0d48f62');
+  }
   var ghrepos = null;
   var dhrepos = null;
   $.get('data/ghrepos.json', function (repos) {
