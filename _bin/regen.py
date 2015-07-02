@@ -54,7 +54,9 @@ def get_dockerhub_data():
       log('%s/%s - %s', i+1, len(reponames), reponame)
       url = baserepourl + reponame + '/'
       repohtml = get(url)
-      assert 'AUTOMATED BUILD REPOSITORY' in repohtml, reponame + " not automated"
+      if 'AUTOMATED BUILD REPOSITORY' not in repohtml:
+          print('WARNING: ' + reponame + " not automated, skipping")
+          continue
       repoprojs = re.findall(repoprojre, repohtml)
       assert len(repoprojs) == 1, "Got %s for %s" % (repoprojs, reponame)
       repos.append({ "name": reponame, "github_name": repoprojs[0], "url": url })
